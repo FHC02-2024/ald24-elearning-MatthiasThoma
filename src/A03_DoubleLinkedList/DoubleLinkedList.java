@@ -1,13 +1,53 @@
 package A03_DoubleLinkedList;
 
+
 public class DoubleLinkedList<T>
 {
+
+    private Node<T> first;
+
+    private Node<T> last;
+
+    private Node<T> current;
+
+    private int counter;
 
     /**
      * Einfügen einer neuen <T>
      * @param a <T>
      */
     public void add(T a) {
+
+        Node<T> newNode = new Node<>(a);
+
+        if (first == null) {
+            newNode.setPrevious(null);
+            newNode.setNext(null);
+            first = newNode;
+            current = first;
+            last = first;
+
+        }/*
+        else if (last == null){
+
+            first.setNext(newNode);
+            newNode.setPrevious(first);
+            newNode.setNext(null);
+            last = newNode;
+            current = last;
+        }
+        */
+        else {
+
+            last.setNext(newNode);
+            newNode.setPrevious(last);
+            newNode.setNext(null);
+            last = newNode;
+            current = last;
+        }
+        //last.setNext(last);
+        counter++;
+
 
     }
 
@@ -16,12 +56,20 @@ public class DoubleLinkedList<T>
      */
     public void reset() {
 
+        if (first != null)
+            current = first;
+
     }
 
     /**
      * analog zur Funktion reset()
      */
     public void resetToLast() {
+
+
+        current = first;
+        while (current.getNext() != null)
+            current = current.getNext();
 
     }
 
@@ -30,8 +78,11 @@ public class DoubleLinkedList<T>
      * @return Node|null
      */
     public Node<T> getFirst() {
-    	
-    	return null;
+
+        if (first != null)
+            return first;
+        else
+            return null;
     }
     
     /**
@@ -39,8 +90,12 @@ public class DoubleLinkedList<T>
      * @return Node|null
      */
     public Node<T> getLast() {
-    	
-    	return null;
+
+        if (last == null)
+    	    return null;
+        else
+            return last;
+
     }
     
     /**
@@ -50,7 +105,16 @@ public class DoubleLinkedList<T>
      */
     public T next() {
 
-    	return null;
+        Node<T> temp = new Node<>(null);
+
+        if (current == null)
+            return null;
+        else{
+            temp = current;
+            current = current.getNext();
+            return temp.getData();
+        }
+
     }
 
     /**
@@ -59,7 +123,15 @@ public class DoubleLinkedList<T>
      */
     public T previous() {
 
-    	return null;
+        Node<T> temp = new Node<>(null);
+
+        if (current == null)
+            return null;
+        else {
+            temp = current;
+            current = current.getPrevious();
+            return temp.getData();
+        }
     }
     
     /**
@@ -68,12 +140,18 @@ public class DoubleLinkedList<T>
      */
     public void moveNext() {
 
-    }
+        current = current.getNext();
+
+
+        }
+
     
     /**
      * Analog zur Funktion moveNext()
      */
     public void movePrevious() {
+
+        current = current.getPrevious();
 
     }
    
@@ -84,7 +162,13 @@ public class DoubleLinkedList<T>
      */
     public T getCurrent() throws CurrentNotSetException {
 
-    	return null;
+        if (current == null)
+            throw new CurrentNotSetException();
+        T data = current.getData();
+        if (data == null)
+            throw new CurrentNotSetException();
+        else
+    	    return data;
     }
 
     /**
@@ -94,7 +178,15 @@ public class DoubleLinkedList<T>
      */
     public T get(int pos) {
 
-        return null;
+        Node<T> tempPointer = new Node<>(null);
+        tempPointer = first;
+
+        if (pos > counter)
+            return null;
+        for (int i = 1; i < pos; i++) {
+            tempPointer = tempPointer.getNext();
+        }
+        return tempPointer.getData();
     }
 
     /**
@@ -103,6 +195,34 @@ public class DoubleLinkedList<T>
      * @param pos
      */
     public void remove(int pos) {
+
+        Node<T> tempPointer = first;
+
+        if (pos > counter || pos < 1)
+            return;
+
+
+        for (int i = 1; i < pos; i++) {
+            tempPointer = tempPointer.getNext();
+        }
+
+        if (tempPointer.getNext() != null && tempPointer.getPrevious() != null){
+            tempPointer.getNext().setPrevious(tempPointer.getPrevious());
+            tempPointer.getPrevious().setNext(tempPointer.getNext());
+        }
+        else if (tempPointer.getNext() == null && tempPointer.getPrevious() != null)
+            tempPointer.getPrevious().setNext(null);
+        else if (tempPointer.getNext() != null && tempPointer.getPrevious() == null){
+            first = tempPointer.getNext();
+            first.setPrevious(null);
+        }
+        else
+            first = null;
+
+        if (tempPointer == current)
+            current = null;
+        counter--;
+
 
     }
     
@@ -114,6 +234,24 @@ public class DoubleLinkedList<T>
      */
     public void removeCurrent() throws CurrentNotSetException {
 
+        if (current == null)
+            throw new CurrentNotSetException();
+
+        if (current.getNext() == null)
+            throw new CurrentNotSetException();
+        else
+            current.getNext().setPrevious(current.getPrevious());
+
+        if (current.getPrevious() != null)
+            current.getPrevious().setNext(current.getNext());
+
+        if (current.getNext() != null)
+            current = current.getNext();
+        else if (current.getPrevious() != null)
+            current = current.getPrevious();
+        else
+            throw new CurrentNotSetException();
+
     }
     
     /**
@@ -122,6 +260,14 @@ public class DoubleLinkedList<T>
      * @throws CurrentNotSetException 
      */
     public void insertAfterCurrentAndMove(T a) throws CurrentNotSetException {
+
+        if (current == null)
+            throw new CurrentNotSetException();
+        Node<T> newNode = new Node<>(a);
+        current.setNext(newNode);
+        newNode.setPrevious(current);
+        newNode.setNext(null);
+        current = newNode;
 
     }
 }

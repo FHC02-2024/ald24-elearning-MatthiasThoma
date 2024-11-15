@@ -1,9 +1,12 @@
+//Matthias Thoma
 package A01_Stack;
 
 
 public class Stack<T>
 {
 	 private Node<T> first;
+
+     private int counter = 0;
     /**
      * Oberstes Element entfernen und zurückliefern.
      * Existiert kein Element, wird eine Exception ausgelöst.
@@ -11,7 +14,13 @@ public class Stack<T>
      */
     public T pop() throws StackEmptyException {
 
-    	return null;
+        if (counter == 0)
+            throw new StackEmptyException();
+        Node<T> top = first;
+        first = first.getNext();
+        counter--;
+        return top.getData();
+
     }
     
     /**
@@ -20,6 +29,11 @@ public class Stack<T>
      */
     public void push(T i) {
 
+        Node<T> newNode = new Node<>(i);
+        newNode.setNext(first);
+        first = newNode;
+        counter++;
+
     }
     
     /**
@@ -27,6 +41,6 @@ public class Stack<T>
      * @return
      */
     public int getCount() {
-    	return 0;
+    	return counter;
     }
 }
