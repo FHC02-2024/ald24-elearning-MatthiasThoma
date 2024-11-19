@@ -37,12 +37,12 @@ public class Queue<T>
 
         if (first == null)
             first = newNode;
-        else
+        else{
             last.setNext(newNode);
+        }
 
         last = newNode;
-        newNode.setNext(null);
-        last.setNext(last);
+        last.setNext(null);
         counter++;
 
     }

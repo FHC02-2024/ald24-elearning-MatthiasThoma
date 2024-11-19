@@ -24,7 +24,7 @@ public class DoubleLinkedList<T>
             newNode.setPrevious(null);
             newNode.setNext(null);
             first = newNode;
-            current = first;
+            //current = first;
             last = first;
 
         }
@@ -33,7 +33,7 @@ public class DoubleLinkedList<T>
             newNode.setPrevious(last);
             newNode.setNext(null);
             last = newNode;
-            current = last;
+            //current = last;
         }
         counter++;
     }
@@ -88,7 +88,7 @@ public class DoubleLinkedList<T>
      */
     public T next() {
 
-        Node<T> temp = new Node<>(null);
+        Node<T> temp;
 
         if (current == null)
             return null;
@@ -106,7 +106,7 @@ public class DoubleLinkedList<T>
      */
     public T previous() {
 
-        Node<T> temp = new Node<>(null);
+        Node<T> temp;
 
         if (current == null)
             return null;
@@ -123,7 +123,12 @@ public class DoubleLinkedList<T>
      */
     public void moveNext() {
 
-        current = current.getNext();
+        if (current == null) {
+        }
+        else if (current.getNext() == null)
+            current = null;
+        else
+            current = current.getNext();
 
         }
 
@@ -133,7 +138,12 @@ public class DoubleLinkedList<T>
      */
     public void movePrevious() {
 
-        current = current.getPrevious();
+        if (current == null) {
+        }
+        else if (current.getPrevious() == null)
+            current = null;
+        else
+            current = current.getPrevious();
     }
    
     /**
@@ -155,12 +165,12 @@ public class DoubleLinkedList<T>
      */
     public T get(int pos) {
 
-        Node<T> tempPointer = new Node<>(null);
+        Node<T> tempPointer;
         tempPointer = first;
 
         if (pos > counter)
             return null;
-        for (int i = 0; i < pos; i++) {
+        for (int i = 1; i < pos; i++) {
             tempPointer = tempPointer.getNext();
         }
         return tempPointer.getData();
@@ -187,8 +197,11 @@ public class DoubleLinkedList<T>
             tempPointer.getNext().setPrevious(tempPointer.getPrevious());
             tempPointer.getPrevious().setNext(tempPointer.getNext());
         }
-        else if (tempPointer.getNext() == null && tempPointer.getPrevious() != null)
-            tempPointer.getPrevious().setNext(null);
+        else if (tempPointer.getNext() == null && tempPointer.getPrevious() != null){
+            last = tempPointer.getPrevious();
+            last.setNext(null);
+        }
+
         else if (tempPointer.getNext() != null && tempPointer.getPrevious() == null){
             first = tempPointer.getNext();
             first.setPrevious(null);
@@ -216,23 +229,22 @@ public class DoubleLinkedList<T>
 
         if (current == first && current.getNext() == null){
            first = null;
+           current = null;
         }
         else if (current == first) {
-            current = current.getNext();
-            current.setPrevious(null);
-            first = current;
+            first = current.getNext();
+            first.setPrevious(null);
+            current = first;
         }
         else if (current.getNext() == null ){
-            current.getPrevious().setNext(null);
-            if (current.getPrevious() != null)
-                current = current.getPrevious();
-            else if (current.getPrevious() == null)
-                 throw new CurrentNotSetException();
+            current = current.getPrevious();
+            current.setNext(null);
+            last = current;
         }
         else {
             current.getPrevious().setNext(current.getNext());
             current.getNext().setPrevious(current.getPrevious());
-            current = current.getPrevious();
+            current = current.getNext();
         }
         counter--;
     }
@@ -247,16 +259,19 @@ public class DoubleLinkedList<T>
         Node<T> newNode = new Node<>(a);
         if (current == null)
             throw new CurrentNotSetException();
+
         if (current.getNext() == null){
             current.setNext(newNode);
             newNode.setPrevious(current);
-            current = newNode;
+            last = newNode;
         }
         else {
             newNode.setNext(current.getNext());
             newNode.setPrevious(current);
             current.setNext(newNode);
-            current = newNode;
+            current.getNext().setPrevious(newNode);
         }
+        current = newNode;
+        counter++;
     }
 }
