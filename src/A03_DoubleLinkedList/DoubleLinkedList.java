@@ -268,8 +268,8 @@ public class DoubleLinkedList<T>
         else {
             newNode.setNext(current.getNext());
             newNode.setPrevious(current);
-            current.setNext(newNode);
             current.getNext().setPrevious(newNode);
+            current.setNext(newNode);
         }
         current = newNode;
         counter++;
